@@ -1,0 +1,15 @@
+version: "3"
+services:
+  filesaver:
+    image: iqtlabs/edgetech-filesaver:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - FILETOPIC=/data/filesave/binary
+      - FILESAVENAME=datafile
+      - FILEAPPEND=False
+      - FIELTIMESTAMP=False
+    volumes:
+      - filevolume:/root/filevolume
+    restart: unless-stopped
