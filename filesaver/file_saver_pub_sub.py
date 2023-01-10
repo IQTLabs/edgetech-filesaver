@@ -57,7 +57,6 @@ class FileSaverPubSub(BaseMQTTPubSub):
     def _to_save_callback(
         self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
     ) -> None:
-        print("HERE")
         payload_json_str = str(msg.payload.decode("utf-8"))
         with open(self.file_path, encoding="utf-8", mode="a") as file_pointer:
             file_pointer.write("\n\t" + payload_json_str + ",")
@@ -66,7 +65,6 @@ class FileSaverPubSub(BaseMQTTPubSub):
         self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
     ) -> None:
         c2c_payload = json.loads(str(msg.payload.decode("utf-8")))
-        print(c2c_payload)
         if c2c_payload["msg"] == "NEW FILE":
             self._setup_new_write_file()
 
@@ -82,8 +80,16 @@ class FileSaverPubSub(BaseMQTTPubSub):
         )
 
         while True:
-            schedule.run_pending()
-            sleep(0.001)
+            try:
+                schedule.run_pending()
+                sleep(0.001)
+            except Exception as e:
+                print(e)
+                if self.file_path:
+                    with open(
+                        self.file_path, encoding="utf-8", mode="a"
+                    ) as file_pointer:
+                        file_pointer.write("\n]")
 
 
 if __name__ == "__main__":
@@ -93,6 +99,6 @@ if __name__ == "__main__":
         data_root=os.environ.get("DATA_ROOT"),
         sensor_directory_name=os.environ.get("SENSOR_DIR"),
         file_prefix=os.environ.get("FILE_PREFIX"),
-        mqtt_ip=os.environ.get("MQTT_IP")
+        mqtt_ip=os.environ.get("MQTT_IP"),
     )
     saver.main()
