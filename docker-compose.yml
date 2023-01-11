@@ -16,8 +16,8 @@ services:
       context: ../edgetech-filesaver/filesaver
       dockerfile: ./Dockerfile
     environment:
-      - TO_SAVE_TOPIC="/AISonobuoy/<HOSTNAME>/AIS/edgetech-daisy/bytestring"
-      - C2C_TOPIC="/AISonobuoy/<HOSTNAME>/C2C/edgetech-c2c/string"
+      - TO_SAVE_TOPIC=/AISonobuoy/<HOSTNAME>/AIS/edgetech-daisy/bytestring
+      - C2_TOPIC=/AISonobuoy/<HOSTNAME>/C2/edgetech-c2/string
       - DATA_ROOT=/sensor-data
       - SENSOR_DIR=ais
       - FILE_PREFIX=daisy_ais_
