@@ -6,21 +6,25 @@ services:
       - "1883:1883"
       - "9001:9001"
     build:
-      context: ./mqtt
+      context: ../edgetech-core/mqtt
       dockerfile: ./Dockerfile
     restart: unless-stopped
   filesaver:
     image: iqtlabs/edgetech-filesaver:latest
     network_mode: "host"
     build:
-      context: ../edgetech-filesaver/filesaver
+      context: ./filesaver
       dockerfile: ./Dockerfile
     environment:
-      - TO_SAVE_TOPIC=/AISonobuoy/<HOSTNAME>/AIS/edgetech-daisy/bytestring
+      - SENSOR_SAVE_TOPIC=/AISonobuoy/<HOSTNAME>/AIS/edgetech-daisy/bytestring
+      - TELEMETRY_SAVE_TOPIC=/AISonobuoy/<HOSTNAME>/telemetry/telemetry/string
       - C2_TOPIC=/AISonobuoy/<HOSTNAME>/C2/edgetech-c2/string
       - DATA_ROOT=/sensor-data
       - SENSOR_DIR=ais
-      - FILE_PREFIX=daisy_ais_
+      - TELEMETRY_DIR=telemetry
+      - SENSOR_FILE_PREFIX=daisy_ais_
+      - TELEMETRY_FILE_PREFIX=pinephone_telemetry_
+      - MQTT_IP=mqtt
     volumes:
       - /home/mobian/sensor-data:/sensor-data
     restart: unless-stopped
