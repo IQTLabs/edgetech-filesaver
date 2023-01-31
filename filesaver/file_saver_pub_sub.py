@@ -1,3 +1,5 @@
+"""_summary_
+"""
 import os
 import json
 from time import sleep
@@ -23,6 +25,19 @@ class FileSaverPubSub(BaseMQTTPubSub):
         telemetry_file_prefix: str,
         **kwargs: Any
     ) -> None:
+        """_summary_
+
+        Args:
+            self (Any): _description_
+            sensor_save_topic (str): _description_
+            telemetry_save_topic (str): _description_
+            c2c_topic (str): _description_
+            data_root (str): _description_
+            sensor_directory_name (str): _description_
+            telemetry_directory_name (str): _description_
+            sensor_file_prefix (str): _description_
+            telemetry_file_prefix (str): _description_
+        """        
         super().__init__(**kwargs)
 
         self.sensor_save_topic = sensor_save_topic
@@ -78,6 +93,18 @@ class FileSaverPubSub(BaseMQTTPubSub):
     def _setup_new_write_file(
         self: Any, file_prefix: str, save_path: str, prev_file: str, file_path: str
     ) -> Tuple:
+        """_summary_
+
+        Args:
+            self (Any): _description_
+            file_prefix (str): _description_
+            save_path (str): _description_
+            prev_file (str): _description_
+            file_path (str): _description_
+
+        Returns:
+            Tuple: _description_
+        """        
         file_timestamp = str(int(datetime.utcnow().timestamp()))
         file_name = file_prefix + file_timestamp + self.file_suffix
         file_path = os.path.join(save_path, file_name)
@@ -96,6 +123,14 @@ class FileSaverPubSub(BaseMQTTPubSub):
     def _sensor_save_callback(
         self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
     ) -> None:
+        """_summary_
+
+        Args:
+            self (Any): _description_
+            _client (mqtt.Client): _description_
+            _userdata (Dict[Any, Any]): _description_
+            msg (Any): _description_
+        """        
         payload_json_str = str(msg.payload.decode("utf-8"))
         with open(self.sensor_file_path, encoding="utf-8", mode="a") as file_pointer:
             file_pointer.write("\n\t" + payload_json_str + ",")
@@ -103,6 +138,14 @@ class FileSaverPubSub(BaseMQTTPubSub):
     def _telemetry_save_callback(
         self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
     ) -> None:
+        """_summary_
+
+        Args:
+            self (Any): _description_
+            _client (mqtt.Client): _description_
+            _userdata (Dict[Any, Any]): _description_
+            msg (Any): _description_
+        """        
         payload_json_str = str(msg.payload.decode("utf-8"))
         with open(self.telemetry_file_path, encoding="utf-8", mode="a") as file_pointer:
             file_pointer.write("\n\t" + payload_json_str + ",")
@@ -110,6 +153,14 @@ class FileSaverPubSub(BaseMQTTPubSub):
     def _c2c_callback(
         self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
     ) -> None:
+        """_summary_
+
+        Args:
+            self (Any): _description_
+            _client (mqtt.Client): _description_
+            _userdata (Dict[Any, Any]): _description_
+            msg (Any): _description_
+        """        
         c2c_payload = json.loads(str(msg.payload.decode("utf-8")))
         if c2c_payload["msg"] == "NEW FILE":
             self.prev_sensor_file, self.sensor_file_path = self._setup_new_write_file(
@@ -129,6 +180,11 @@ class FileSaverPubSub(BaseMQTTPubSub):
             )
 
     def main(self: Any) -> None:
+        """_summary_
+
+        Args:
+            self (Any): _description_
+        """        
         schedule.every(10).seconds.do(
             self.publish_heartbeat, payload="File Saver Heartbeat"
         )
