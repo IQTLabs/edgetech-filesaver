@@ -11,7 +11,6 @@ services:
     restart: unless-stopped
   filesaver:
     image: iqtlabs/edgetech-filesaver:latest
-    network_mode: "host"
     build:
       context: ./filesaver
       dockerfile: ./Dockerfile
