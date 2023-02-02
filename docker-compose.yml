@@ -5,9 +5,6 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
-    build:
-      context: ../edgetech-core/mqtt
-      dockerfile: ./Dockerfile
     restart: unless-stopped
   filesaver:
     image: iqtlabs/edgetech-filesaver:latest
@@ -15,17 +12,24 @@ services:
       context: ./filesaver
       dockerfile: ./Dockerfile
     environment:
-      - SENSOR_SAVE_TOPIC=/AISonobuoy/<HOSTNAME>/AIS/edgetech-daisy/bytestring
-      - TELEMETRY_SAVE_TOPIC=/AISonobuoy/<HOSTNAME>/telemetry/telemetry/string
-      - C2_TOPIC=/AISonobuoy/<HOSTNAME>/C2/edgetech-c2/string
-      - DATA_ROOT=/sensor-data
-      - SENSOR_DIR=ais
-      - TELEMETRY_DIR=telemetry
-      - SENSOR_FILE_PREFIX=daisy_ais_
-      - TELEMETRY_FILE_PREFIX=pinephone_telemetry_
-      - MQTT_IP=mqtt
+      - SENSOR_SAVE_TOPIC=${SENSOR_SAVE_TOPIC}
+      - TELEMETRY_SAVE_TOPIC=${TELEMETRY_SAVE_TOPIC}
+      - C2_TOPIC=${C2_TOPIC}
+      - DATA_ROOT=${SENSOR_DIR}
+      - SENSOR_DIR=${SENSOR_DIR}
+      - TELEMETRY_DIR=${TELEMETRY_DIR}
+      - SENSOR_FILE_PREFIX=${SENSOR_FILE_PREFIX}
+      - TELEMETRY_FILE_PREFIX=${TELEMETRY_FILE_PREFIX}
+      - MQTT_IP=${MQTT_IP}
     volumes:
       - /home/mobian/sensor-data:/sensor-data
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "10"
     depends_on: 
       - mqtt
+    env_file:
+      - .env
