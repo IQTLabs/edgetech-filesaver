@@ -99,6 +99,8 @@ If you do not have them installed, you can install them with `pip install "black
 5. Push to the Branch (`git push origin dev`)
 6. Open a Pull Request
 
+See `CONTRIBUTING.md` for more information.
+
 ## License
 
 Distributed under the [Apache 2.0](https://github.com/IQTLabs/edgetech-filesaver/blob/main/LICENSE). See `LICENSE.txt` for more information.
