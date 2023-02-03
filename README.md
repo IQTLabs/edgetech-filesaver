@@ -21,6 +21,12 @@
 [Docker]: https://img.shields.io/badge/docker-35495E?style=for-the-badge&logo=docker
 [Docker-url]: https://www.docker.com
 
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
 <br />
 <div align="center">
   <a href="https://iqtlabs.org/">
@@ -40,12 +46,6 @@
     <a href="https://github.com/IQTLabs/edgetech-filesaver/issues">Request Feature</a>
   </p>
 </div>
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 
 ### Built With
 
