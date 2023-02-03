@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "filesaver"
+version = "0.1.0"
+description = "MQTT client to read data from sensor and telemetry topics and write them to JSON arrays"
+authors = ["Ari <ari.chadda@gmail.com>"]
+license = "Apache 2.0"
+readme = "../README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+schedule = "^1.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
