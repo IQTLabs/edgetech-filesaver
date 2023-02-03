@@ -11,16 +11,6 @@ services:
     build:
       context: ./filesaver
       dockerfile: ./Dockerfile
-    environment:
-      - SENSOR_SAVE_TOPIC=${SENSOR_SAVE_TOPIC}
-      - TELEMETRY_SAVE_TOPIC=${TELEMETRY_SAVE_TOPIC}
-      - C2_TOPIC=${C2_TOPIC}
-      - DATA_ROOT=${SENSOR_DIR}
-      - SENSOR_DIR=${SENSOR_DIR}
-      - TELEMETRY_DIR=${TELEMETRY_DIR}
-      - SENSOR_FILE_PREFIX=${SENSOR_FILE_PREFIX}
-      - TELEMETRY_FILE_PREFIX=${TELEMETRY_FILE_PREFIX}
-      - MQTT_IP=${MQTT_IP}
     volumes:
       - /home/mobian/sensor-data:/sensor-data
     restart: unless-stopped
