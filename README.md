@@ -73,7 +73,15 @@ Spinning up this system requires an MQTT server and this container to be include
 
 As this system is meant to be spun up with MQTT topics you would like to write to files, copying the filesaver `docker-compose` statements into a master `docker-compose.yml` and  `.env` files with your entire system of containers is the preferred workflow. Find an application architecture diagram example of how the usage of this module was envisioned below.
 
-<img src="images/diagram.png" alt="Diagram">
+```mermaid 
+
+flowchart TD
+    sensordata(Sensor Data) -- Sensor Data Topic --> mqtt{MQTT}
+    telemetrydata(Telemetry Data) -- Telemetry Data Topic --> mqtt{MQTT}
+    c2(C2) -- Command & Control Topic --> mqtt{MQTT}
+     mqtt{MQTT} -- Subscribed to All Three Topics --> filesaver(Filesaver)
+
+```
 
 ## Roadmap
 
