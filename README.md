@@ -100,7 +100,7 @@ black --diff --check *.py
 
 pylint --disable=all --enable=unused-import *.py
 
-mypy --allow-untyped-decorators --ignore-missing-imports --no-warn-return-any --strict *.py
+mypy --allow-untyped-decorators --ignore-missing-imports --no-warn-return-any --strict --allow-subclassing-any *.py
 ```
 If you do not have them installed, you can install them with `pip install "black<23" pylint==v3.0.0a3 mypy==v0.991`.
 
