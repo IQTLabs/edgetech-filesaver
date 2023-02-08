@@ -1,5 +1,3 @@
-
-
 <a name="readme-top"></a>
 
 [contributors-shield]: https://img.shields.io/github/contributors/IQTLabs/edgetech-filesaver.svg?style=for-the-badge
@@ -73,7 +71,21 @@ Spinning up this system requires an MQTT server and this container to be include
 
 As this system is meant to be spun up with MQTT topics you would like to write to files, copying the filesaver `docker-compose` statements into a master `docker-compose.yml` and  `.env` files with your entire system of containers is the preferred workflow. Find an application architecture diagram example of how the usage of this module was envisioned below.
 
-<img src="images/diagram.png" alt="Diagram">
+```mermaid 
+
+flowchart TD
+    sensordata(Sensor Data) -- Sensor Data Topic --> mqtt{MQTT}
+    telemetrydata(Telemetry Data) -- Telemetry Data Topic --> mqtt{MQTT}
+    c2(C2) -- Command & Control Topic --> mqtt{MQTT}
+     mqtt{MQTT} -- Subscribed to All Three Topics --> filesaver(Filesaver)
+
+style mqtt fill:#0072bc,color:#ffffff
+style sensordata fill:#80c342,color:#ffffff
+style telemetrydata fill:#80c342,color:#ffffff
+style filesaver fill:#F9D308,color:#ffffff
+style c2 fill:#f05343,color:#ffffff
+
+```
 
 ## Roadmap
 
@@ -92,7 +104,7 @@ black --diff --check *.py
 
 pylint --disable=all --enable=unused-import *.py
 
-mypy --allow-untyped-decorators --ignore-missing-imports --no-warn-return-any --strict *.py
+mypy --allow-untyped-decorators --ignore-missing-imports --no-warn-return-any --strict --allow-subclassing-any *.py
 ```
 If you do not have them installed, you can install them with `pip install "black<23" pylint==v3.0.0a3 mypy==v0.991`.
 
