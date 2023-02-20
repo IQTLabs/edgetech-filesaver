@@ -2,7 +2,7 @@
 name = "filesaver"
 version = "0.1.0"
 description = "MQTT client to read data from sensor and telemetry topics and write them to JSON arrays"
-authors = ["Ari <ari.chadda@gmail.com>"]
+authors = ["Ari <achadda@iqt.org>", "Rob <rcaudill@iqt.org>", "Logan <lkunka@iqt.org>", "Mona <mgogia@iqt.org>", "Jon <jmeade@iqt.org>", "Mike <mchadwick@iqt.org>"]
 license = "Apache 2.0"
 readme = "../README.md"
 

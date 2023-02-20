@@ -98,11 +98,11 @@ class FileSaverPubSub(BaseMQTTPubSub):
         os.makedirs(self.sensor_save_path, exist_ok=True)
         os.makedirs(self.telemetry_save_path, exist_ok=True)
 
-        # to initalize full path by combining save path and filename
+        # to initialize full path by combining save path and filename
         self.sensor_file_path = None
         self.telemetry_file_path = None
 
-        # create write files (JSON array initalization)
+        # create write files (JSON array initialization)
         self.sensor_file_path = self._setup_new_write_file(
             self.sensor_file_prefix,
             self.sensor_save_path,
@@ -153,10 +153,10 @@ class FileSaverPubSub(BaseMQTTPubSub):
         sensor file.
 
         Args:
-            _client (mqtt.Client): the MQTT client that was instatntiated in the constructor.
+            _client (mqtt.Client): the MQTT client that was instantiated in the constructor.
             _userdata (Dict[Any,Any]): data passed to the callback through the MQTT paho Client
-            class contructor or set later through user_data_set().
-            msg (Any): the recieved message over the subscribed channel that includes
+            class constructor or set later through user_data_set().
+            msg (Any): the received message over the subscribed channel that includes
             the topic name and payload after decoding. The messages here will include the
             sensor data to save.
         """
@@ -174,10 +174,10 @@ class FileSaverPubSub(BaseMQTTPubSub):
         telemetry file.
 
         Args:
-            _client (mqtt.Client): the MQTT client that was instatntiated in the constructor.
+            _client (mqtt.Client): the MQTT client that was instantiated in the constructor.
             _userdata (Dict[Any,Any]): data passed to the callback through the MQTT paho Client
-            class contructor or set later through user_data_set().
-            msg (Any): the recieved message over the subscribed channel that includes
+            class constructor or set later through user_data_set().
+            msg (Any): the received message over the subscribed channel that includes
             the topic name and payload after decoding. The messages here will include the
             telemetry data to save.
         """
@@ -194,10 +194,10 @@ class FileSaverPubSub(BaseMQTTPubSub):
         """Callback for the C2 topic which currently triggers the changing of files to write to.
 
         Args:
-            _client (mqtt.Client): the MQTT client that was instatntiated in the constructor.
+            _client (mqtt.Client): the MQTT client that was instantiated in the constructor.
             _userdata (Dict[Any,Any]): data passed to the callback through the MQTT paho Client
-            class contructor or set later through user_data_set().
-            msg (Any): the recieved message over the subscribed channel that includes
+            class constructor or set later through user_data_set().
+            msg (Any): the received message over the subscribed channel that includes
             the topic name and payload after decoding. The messages here will include the C2
             triggers to switch files.
         """
