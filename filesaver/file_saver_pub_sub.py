@@ -271,8 +271,8 @@ class FileSaverPubSub(BaseMQTTPubSub):
 if __name__ == "__main__":
     # instantiate class object w/ env variables pass via docker-compose
     saver = FileSaverPubSub(
-        sensor_save_topic=str(os.environ.get("SENSOR_SAVE_TOPIC")),
-        telemetry_save_topic=str(os.environ.get("TELEMETRY_SAVE_TOPIC")),
+        sensor_save_topic=str(os.environ.get("SENSOR_TOPIC")),
+        telemetry_save_topic=str(os.environ.get("TELEMETRY_TOPIC")),
         c2c_topic=str(os.environ.get("C2_TOPIC")),
         data_root=str(os.environ.get("DATA_ROOT")),
         sensor_directory_name=str(os.environ.get("SENSOR_DIR")),
