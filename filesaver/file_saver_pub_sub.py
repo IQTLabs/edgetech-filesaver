@@ -25,12 +25,18 @@ class FileSaverPubSub(BaseMQTTPubSub):
         self: Any,
         sensor_save_topic: str,
         telemetry_save_topic: str,
+        audio_base64_save_topic: str,
+        imagery_base64_save_topic: str,
         c2c_topic: str,
         data_root: str,
         sensor_directory_name: str,
         telemetry_directory_name: str,
+        base64_audio_directory_name: str,
+        base64_imagery_directory_name: str,
         sensor_file_prefix: str,
         telemetry_file_prefix: str,
+        base64_audio_file_prefix: str,
+        base64_imagery_file_prefix: str,
         debug: bool = False,
         **kwargs: Any
     ) -> None:
@@ -57,6 +63,8 @@ class FileSaverPubSub(BaseMQTTPubSub):
         # saving topics
         self.sensor_save_topic = sensor_save_topic
         self.telemetry_save_topic = telemetry_save_topic
+        self.audio_base64_save_topic = audio_base64_save_topic
+        self.imagery_base64_save_topic = imagery_base64_save_topic
 
         # trigger topic
         self.c2c_topic = c2c_topic
@@ -67,14 +75,24 @@ class FileSaverPubSub(BaseMQTTPubSub):
         # file write directories
         self.sensor_save_path = os.path.join(data_root, sensor_directory_name)
         self.telemetry_save_path = os.path.join(data_root, telemetry_directory_name)
+        self.base64_audio_save_path = os.path.join(
+            data_root, base64_audio_directory_name
+        )
+        self.base64_imagery_save_path = os.path.join(
+            data_root, base64_imagery_directory_name
+        )
 
         # file prefix by data
         self.sensor_file_prefix = sensor_file_prefix
         self.telemetry_file_prefix = telemetry_file_prefix
+        self.base64_audio_file_prefix = base64_audio_file_prefix
+        self.base64_imagery_file_prefix = base64_imagery_file_prefix
 
         # files saved with write timestamps
         self.sensor_file_timestamp = ""
         self.telemetry_file_timestamp = ""
+        self.base64_audio_file_timestamp = ""
+        self.base64_imagery_file_timestamp = ""
 
         # this module writes JSON[s]
         self.file_suffix = ".json"
@@ -88,6 +106,16 @@ class FileSaverPubSub(BaseMQTTPubSub):
             + self.telemetry_file_timestamp
             + self.file_suffix
         )
+        self.base64_audio_file_name = (
+            self.base64_audio_file_prefix
+            + self.base64_audio_file_timestamp
+            + self.file_suffix
+        )
+        self.base64_imagery_file_name = (
+            self.base64_imagery_file_prefix
+            + self.base64_imagery_file_timestamp
+            + self.file_suffix
+        )
 
         # connecting to MQTT server
         self.connect_client()
@@ -97,10 +125,14 @@ class FileSaverPubSub(BaseMQTTPubSub):
         # creating save directories if they do not exist
         os.makedirs(self.sensor_save_path, exist_ok=True)
         os.makedirs(self.telemetry_save_path, exist_ok=True)
+        os.makedirs(self.base64_audio_save_path, exist_ok=True)
+        os.makedirs(self.base64_imagery_save_path, exist_ok=True)
 
         # to initialize full path by combining save path and filename
         self.sensor_file_path = None
         self.telemetry_file_path = None
+        self.base64_audio_file_path = None
+        self.base64_imagery_file_path = None
 
         # create write files (JSON array initialization)
         self.sensor_file_path = self._setup_new_write_file(
@@ -112,6 +144,16 @@ class FileSaverPubSub(BaseMQTTPubSub):
             self.telemetry_file_prefix,
             self.telemetry_save_path,
             self.telemetry_file_path,
+        )
+        self.base64_audio_file_path = self._setup_new_write_file(
+            self.base64_audio_file_prefix,
+            self.base64_audio_save_path,
+            self.base64_audio_file_path,
+        )
+        self.base64_imagery_file_path = self._setup_new_write_file(
+            self.base64_imagery_file_prefix,
+            self.base64_imagery_save_path,
+            self.base64_imagery_file_path,
         )
 
     def _setup_new_write_file(
@@ -188,6 +230,52 @@ class FileSaverPubSub(BaseMQTTPubSub):
         with open(self.telemetry_file_path, encoding="utf-8", mode="a") as file_pointer:
             file_pointer.write("\n\t" + payload_json_str + ",")
 
+    def _base64_audio_save_callback(
+        self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
+    ) -> None:
+        """Callback for the telemetry data that specifies writing the message payload to the
+        telemetry file.
+
+        Args:
+            _client (mqtt.Client): the MQTT client that was instantiated in the constructor.
+            _userdata (Dict[Any,Any]): data passed to the callback through the MQTT paho Client
+            class constructor or set later through user_data_set().
+            msg (Any): the received message over the subscribed channel that includes
+            the topic name and payload after decoding. The messages here will include the
+            telemetry data to save.
+        """
+        # decode the JSON payload from callback message
+        payload_json_str = str(msg.payload.decode("utf-8"))
+
+        # open and write to telemetry file
+        with open(
+            self.base64_audio_file_path, encoding="utf-8", mode="a"
+        ) as file_pointer:
+            file_pointer.write("\n\t" + payload_json_str + ",")
+
+    def _base64_imagery_save_callback(
+        self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
+    ) -> None:
+        """Callback for the telemetry data that specifies writing the message payload to the
+        telemetry file.
+
+        Args:
+            _client (mqtt.Client): the MQTT client that was instantiated in the constructor.
+            _userdata (Dict[Any,Any]): data passed to the callback through the MQTT paho Client
+            class constructor or set later through user_data_set().
+            msg (Any): the received message over the subscribed channel that includes
+            the topic name and payload after decoding. The messages here will include the
+            telemetry data to save.
+        """
+        # decode the JSON payload from callback message
+        payload_json_str = str(msg.payload.decode("utf-8"))
+
+        # open and write to telemetry file
+        with open(
+            self.base64_imagery_file_path, encoding="utf-8", mode="a"
+        ) as file_pointer:
+            file_pointer.write("\n\t" + payload_json_str + ",")
+
     def _c2c_callback(
         self: Any, _client: mqtt.Client, _userdata: Dict[Any, Any], msg: Any
     ) -> None:
@@ -216,6 +304,16 @@ class FileSaverPubSub(BaseMQTTPubSub):
                 self.telemetry_save_path,
                 self.telemetry_file_path,
             )
+            self.base64_audio_file_path = self._setup_new_write_file(
+                self.base64_audio_file_prefix,
+                self.base64_audio_save_path,
+                self.base64_audio_file_path,
+            )
+            self.base64_imagery_file_path = self._setup_new_write_file(
+                self.base64_imagery_file_prefix,
+                self.base64_imagery_save_path,
+                self.base64_imagery_file_path,
+            )
 
     def main(self: Any) -> None:
         """Main loop and function that setup the heartbeat to keep the TCP/IP
@@ -232,14 +330,18 @@ class FileSaverPubSub(BaseMQTTPubSub):
             [
                 self.sensor_save_topic,
                 self.telemetry_save_topic,
+                self.audio_base64_save_topic,
+                self.imagery_base64_save_topic,
                 self.c2c_topic,
             ],
             [
                 self._sensor_save_callback,
                 self._telemetry_save_callback,
+                self._base64_audio_save_callback,
+                self._base64_imagery_save_callback,
                 self._c2c_callback,
             ],
-            [2, 2, 2],
+            [2, 2, 2, 2, 2],
         )
 
         # keep main thread alive
@@ -265,6 +367,17 @@ class FileSaverPubSub(BaseMQTTPubSub):
                         self.telemetry_file_path, encoding="utf-8", mode="a"
                     ) as file_pointer:
                         file_pointer.write("\n]")
+                if self.base64_audio_file_path:
+                    with open(
+                        self.base64_audio_file_path, encoding="utf-8", mode="a"
+                    ) as file_pointer:
+                        file_pointer.write("\n]")
+
+                if self.base64_imagery_file_path:
+                    with open(
+                        self.base64_imagery_file_path, encoding="utf-8", mode="a"
+                    ) as file_pointer:
+                        file_pointer.write("\n]")
 
 
 # interactive session
@@ -273,12 +386,18 @@ if __name__ == "__main__":
     saver = FileSaverPubSub(
         sensor_save_topic=str(os.environ.get("SENSOR_TOPIC")),
         telemetry_save_topic=str(os.environ.get("TELEMETRY_TOPIC")),
+        audio_base64_save_topic=str(os.environ.get("AUDIO_BASE64_TOPIC")),
+        imagery_base64_save_topic=str(os.environ.get("IMAGE_BASE64_TOPIC")),
         c2c_topic=str(os.environ.get("C2_TOPIC")),
         data_root=str(os.environ.get("DATA_ROOT")),
         sensor_directory_name=str(os.environ.get("SENSOR_DIR")),
         telemetry_directory_name=str(os.environ.get("TELEMETRY_DIR")),
+        base64_audio_directory_name=str(os.environ.get("BASE64_AUDIO_DIR")),
+        base64_imagery_directory_name=str(os.environ.get("BASE64_IMAGERY_DIR")),
         sensor_file_prefix=str(os.environ.get("SENSOR_FILE_PREFIX")),
         telemetry_file_prefix=str(os.environ.get("TELEMETRY_FILE_PREFIX")),
+        base64_audio_file_prefix=str(os.environ.get("BASE64_AUDIO_FILE_PREFIX")),
+        base64_imagery_file_prefix=str(os.environ.get("BASE64_AUDIO_FILE_PREFIX")),
         mqtt_ip=str(os.environ.get("MQTT_IP")),
     )
     # spin
